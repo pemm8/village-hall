@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block extra_header %}
+  {% if session.logged_in %}
+    <li><a href="{{ url_for('edit_event', slug=event.slug) }}">Edit event</a></li>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+	<div class="container contentalign brandtext brandtext-inverse">
+
+		<p><a href="javascript:history.back()"><span class="glyphicon glyphicon-chevron-left"></span> Back to events list</a></p>
+
+		<h2>{{ event.title }}</h2>
+		<hr>
+		{% if event.date %}
+			<div class="well">
+				<b>Date:</b> {{ event.date.strftime('%d %B %Y at %H:%M%p') }}
+			</div>
+		{% endif %}
+		{{ event.html_content }}
+	</div>
+{% endblock %}

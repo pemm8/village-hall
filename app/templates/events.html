@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Events - {% endblock %}
+
+{% block content %}
+
+<div class="container contentalign brandtext brandtext-inverse">
+
+	<h2>{% block content_title %}Events{% endblock %}</h2><hr>
+
+	<div class="row">
+
+		<div class="col-md-2 brandtext brandtext-inverse">
+
+			<br>
+
+			<b>Filter by month:</b>
+
+			<br><br>
+
+			<div id="filters">
+
+				{% for m in months %}
+
+					<a data-filterdate="{{ m[1] }}">{{ m[0] }}</a><br>
+
+				{% endfor %}
+
+			</div>
+
+			<br><a id="clear-filter">Clear Filter</a>
+
+	  	</div>
+
+	  	<div class="col-md-1">
+
+	  	</div>
+
+	  	<div class="col-md-9">
+
+			{% if not events %}
+			  <div class="brandtext brandtext-inverse well">
+				<i>No events found!</i>
+			  </div>
+			{% endif %}
+
+			{% for e in events %}
+			<div class="event row brandtext brandtext-inverse well" data-eventdate="{{ e.date.strftime('%m%y') }}">
+				<div class="col-md-7">
+					<a href="{{ url_for('event_detail', slug=e.slug) }}">
+						<h2>{{ e.title }}</h2>
+					</a>
+
+					{% if e.date %}
+						<span class="text-muted">On {{ e.date.strftime('%d %B %Y at %H:%M%p') }}</span>
+					{% endif %}
+					
+					<p>
+						{% if e.excerpt %}
+							{{ e.excerpt }}
+						{% else %}
+							{{ e.content|truncate(length=255, killwords=False)|striptags }}
+						{% endif %}
+					</p>
+				</div>
+				<div class="col-md-5 thumbnail">
+				  <img class="featurette-image img-responsive center-block" src="{{ '/static/img/' + e.thumbnail }}" alt="Generic placeholder image">
+				</div>
+
+				<hr class="featurette-divider">
+			  </div>
+
+			{% endfor %}
+
+	  	</div>
+
+	</div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+
+	<script>
+		$(document).ready(function() {
+			$('#filters').on('click', 'a', function() {
+				var did = $(this).data("filterdate");
+				$('.event').not("[data-eventdate=" + did + "]").slideUp();
+				$('.event').filter("[data-eventdate=" + did + "]").slideDown();
+			});
+			$('#clear-filter').on('click', function() {
+				$('.event').slideDown();
+			});
+		});
+	</script>
+
+{% endblock %}

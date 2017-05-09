@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container contentalign brandtext brandtext-inverse">
+
+	<h2>{% block content_title %}Gallery{% endblock %}</h2><hr>
+
+	<div class="row">
+
+	{% for i in images %}
+
+		<div class="col-sm-6 col-md-4">
+		    <div class="thumbnail">
+			    <img src="{{ '/static/img/gallery/' + i.path }}">
+	      		<div class="caption">
+	        		<p>{{ i.caption|truncate(100,True) }}</p>
+	      		</div>	
+		    </div>
+		</div>
+
+	{% endfor %}
+
+	</div>
+
+</div>
+
+{% endblock %}

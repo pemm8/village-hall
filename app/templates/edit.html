@@ -1,0 +1,9 @@
+{% extends "create.html" %}
+
+{% block title %}Edit Event - {% endblock %}
+
+{% block content_title %}Edit Event{% endblock %}
+
+{% block form_action %}{{ url_for('edit_event', slug=event.slug) }}{% endblock %}
+
+{% block save_button %}Save changes{% endblock %}
