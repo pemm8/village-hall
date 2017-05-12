@@ -29,13 +29,13 @@
 
 				{% for m in months %}
 
-					<a data-filterdate="{{ m[1] }}">{{ m[0] }}</a><br>
+					<a data-filterdate="{{ m[1] }}" id="month-filter" class="btn btn-default btn-block">{{ m[0] }}</a>
 
 				{% endfor %}
 
 			</div>
 
-			<br><a id="clear-filter">Clear Filter</a>
+			<br><a id="clear-filter" class="btn btn-default btn-primary btn-block">Clear Filter</a>
 
 	  	</div>
 
@@ -71,7 +71,7 @@
 					</p>
 				</div>
 				<div class="col-md-5 thumbnail">
-				  <img class="featurette-image img-responsive center-block" src="{{ '/static/img/' + e.thumbnail }}" alt="Generic placeholder image">
+					<img class="featurette-image img-responsive center-block" src="{{ '/static/img/' + e.thumbnail }}" alt="Generic placeholder image">
 				</div>
 
 			  </div>
@@ -97,6 +97,7 @@
 			});
 			$('#clear-filter').on('click', function() {
 				$('.event').slideDown();
+				$('#month-filter').removeclass('btn-primary').addclass('btn-default');
 			});
 		});
 	</script>
