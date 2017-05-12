@@ -6,6 +6,13 @@
 
 <div class="container contentalign brandtext brandtext-inverse">
 
+  {% for category, message in get_flashed_messages(with_categories=true) %}
+    <div class="alert alert-{{ category }} alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <p>{{ message }}</p>
+    </div>
+  {% endfor %}
+
 	<h2>{% block content_title %}Events{% endblock %}</h2><hr>
 
 	<div class="row">
@@ -67,7 +74,6 @@
 				  <img class="featurette-image img-responsive center-block" src="{{ '/static/img/' + e.thumbnail }}" alt="Generic placeholder image">
 				</div>
 
-				<hr class="featurette-divider">
 			  </div>
 
 			{% endfor %}
