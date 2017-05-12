@@ -142,6 +142,10 @@ def gallery():
 def contact():
     return render_template('contact.html')
 
+@app.route('/booking')
+def booking():
+    return render_template('contact.html')
+
 admin.add_view(ModelView(Event, db.session))
 admin.add_view(ModelView(GalleryImage, db.session))
 gallerypath = os.path.join(os.path.dirname(__file__), 'static/img/gallery')
