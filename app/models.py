@@ -1,4 +1,4 @@
-import re
+import re, string, random
 
 from app import db, app
 from datetime import datetime
@@ -10,6 +10,12 @@ from micawber.cache import Cache as OEmbedCache
 from flask import Markup
 
 oembed_providers = bootstrap_basic(OEmbedCache())
+
+def gen_slug(title):
+	s=string.lowercase+string.digits
+	uid = ''.join(random.sample(s,5))
+	slug = re.sub('[^\w]+', '-', title.lower()).strip('-')
+	return slug + '-' + uid
 
 class Event(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -39,8 +45,17 @@ class Event(db.Model):
 			maxwidth=app.config['SITE_WIDTH'])
 		return Markup(oembed_content)
 
-	def get_title(self):
-		return re.sub('[^\w]+', '-', self.title.lower()).strip('-')
+	def get_slug(self):
+		slug = gen_slug(self.title)			
+		if Event.query.filter_by(slug=slug).first() is None:
+			return slug
+		else:
+			condition = False
+			while condition == False:
+				slug = gen_slug(self.title)
+				condition = Event.query.filter_by(slug=slug).first()
+				if condition: 
+					return slug
 
 class GalleryImage(db.Model):
 	id = db.Column(db.Integer, primary_key=True)

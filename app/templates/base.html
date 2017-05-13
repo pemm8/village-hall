@@ -90,7 +90,6 @@
 								<li><a href="{{ url_for('index') }}">Home</a></li>
 				                <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
 				                <li><a href="{{ url_for('events') }}">Events</a></li>
-				                <!-- <li><a href="{{ url_for('booking') }}">Book Hall</a></li> -->
 				                <li><a href="{{ url_for('contact') }}">Contact</a></li>
 							</ul>
 							<ul class="nav navbar-nav navbar-right">
@@ -98,7 +97,6 @@
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
 									<ul class="dropdown-menu">
 										{% if session.logged_in %}
-											<li role="separator" class="divider"></li>
 											<li class="dropdown-header">Events Admin</li>
 											<li><a href="{{ url_for('event_drafts') }}">View Drafts</a></li>
 											<li><a href="{{ url_for('create_event') }}">Create</a></li>
@@ -128,7 +126,7 @@
 			<div class="container">
 				<hr class="footer-hr">
 				<p class="pull-right brandtext"><a href="#" class="brandtext-grey">Back to top</a></p>
-				<p class="brandtext brandtext-inverse">&copy; 2017 Paul McLear &middot; 
+				<p class="brandtext brandtext-inverse">&copy; 2017 Paul McLear 
 
 				<!-- <a href="#" class="brandtext-grey">Privacy</a> &middot; <a href="#" class="brandtext-grey">Terms</a> -->
 

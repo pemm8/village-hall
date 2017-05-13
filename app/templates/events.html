@@ -6,12 +6,16 @@
 
 <div class="container contentalign brandtext brandtext-inverse">
 
-  {% for category, message in get_flashed_messages(with_categories=true) %}
-    <div class="alert alert-{{ category }} alert-dismissable">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <p>{{ message }}</p>
-    </div>
-  {% endfor %}
+	{% for category, message in get_flashed_messages(with_categories=true) %}
+	<div class="alert alert-{{ category }} alert-dismissable">
+	  	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	    <p>{{ message }}</p>
+	</div>
+	{% endfor %}
+
+	<div style="width: 100%;">
+		<img src="/static/img/gumley8.jpg" style="object-fit: cover;">
+	</div>
 
 	<h2>{% block content_title %}Events{% endblock %}</h2><hr>
 
@@ -29,7 +33,7 @@
 
 				{% for m in months %}
 
-					<a data-filterdate="{{ m[1] }}" id="month-filter" class="btn btn-default btn-block">{{ m[0] }}</a>
+					<a data-filterdate="{{ m[1] }}" class="btn btn-default btn-block month-filter">{{ m[0] }}</a>
 
 				{% endfor %}
 
@@ -94,10 +98,11 @@
 				var did = $(this).data("filterdate");
 				$('.event').not("[data-eventdate=" + did + "]").slideUp();
 				$('.event').filter("[data-eventdate=" + did + "]").slideDown();
+				$(this).addClass('btn-primary').removeClass('btn-default');
 			});
 			$('#clear-filter').on('click', function() {
 				$('.event').slideDown();
-				$('#month-filter').removeclass('btn-primary').addclass('btn-default');
+				$('.month-filter').removeClass('btn-primary').addClass('btn-default');
 			});
 		});
 	</script>

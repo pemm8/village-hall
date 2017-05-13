@@ -96,7 +96,7 @@ def create_or_edit_event(event, template):
         if not (event.title and event.content):
             flash('Title and Content are required.', 'danger')
         else:
-            event.slug = event.get_title()
+            event.slug = event.get_slug()
             db.session.add(event)
             db.session.commit()
             flash('Event saved successfully.', 'success')
@@ -138,13 +138,16 @@ def gallery():
     images = GalleryImage.query.all()
     return render_template('gallery.html',images=images)
 
-@app.route('/contact')
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    return render_template('contact.html')
+    if request.method == 'POST':
+        flash('Thank you, your message was sent', 'success')
+        render_template('contact_form.html')
+    return render_template('contact_form.html')
 
 @app.route('/booking')
 def booking():
-    return render_template('contact.html')
+    return render_template('contact_form.html')
 
 admin.add_view(ModelView(Event, db.session))
 admin.add_view(ModelView(GalleryImage, db.session))
