@@ -3,7 +3,7 @@ import functools
 import os
 import re
 
-from flask import render_template, flash, redirect, session, url_for, request, g, Markup
+from flask import render_template, flash, redirect, session, url_for, request, g, Markup, abort
 from app import app, db, admin
 from models import *
 from flask_admin.contrib import sqla 
@@ -59,7 +59,7 @@ def index():
 @app.route('/event_drafts')
 @login_required
 def event_drafts():
-    events = Event.query.filter_by(published=False).all()
+    events = Event.query.filter_by(published=False).order_by(Event.date).all()
     months = [('May 2017','0517'),
                 ('Jun 2017','0617'),
                 ('Jul 2017','0717'),
@@ -130,12 +130,14 @@ def edit_event(slug):
 
 @app.route('/<slug>/')
 def event_detail(slug):
-    if session.get('logged_in'):
+    if g.user.is_authenticated:
         event = Event.query.filter_by(slug=slug).first()
     else:
         event = Event.query.filter_by(slug=slug,published=True).first()
     if event:
 	    return render_template('detail.html', event=event)
+    else:
+        abort(404)
 
 @app.route('/gallery')
 def gallery():
