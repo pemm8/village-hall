@@ -13,7 +13,7 @@
 	</div>
 	{% endfor %}
 
-	<h2>{% block content_title %}Events{% endblock %}</h2><hr>
+	<h2 id="page-header">{% block content_title %}Events{% endblock %}</h2><hr>
 
 	<div class="row">
 
@@ -92,14 +92,17 @@
 		$(document).ready(function() {
 			$('#filters').on('click', 'a', function() {
 				var did = $(this).data("filterdate");
+				var dtext = $(this).text();
 				$('.event').not("[data-eventdate=" + did + "]").slideUp();
 				$('.event').filter("[data-eventdate=" + did + "]").slideDown();
 				$('.month-filter').removeClass('btn-primary');
 				$(this).addClass('btn-primary');
+				$('#page-header').text('Events - ' + dtext);
 			});
 			$('#clear-filter').on('click', function() {
 				$('.event').slideDown();
 				$('.month-filter').removeClass('btn-primary').addClass('btn-default');
+				$('#page-header').text('Events');
 			});
 		});
 	</script>
