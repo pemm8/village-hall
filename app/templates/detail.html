@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block extra_header %}
-  {% if session.logged_in %}
+  {% if g.user.is_authenticated %}
     <li><a href="{{ url_for('edit_event', slug=event.slug) }}">Edit event</a></li>
   {% endif %}
 {% endblock %}
@@ -9,7 +9,14 @@
 {% block content %}
 	<div class="container contentalign brandtext brandtext-inverse">
 
-		<p><a href="javascript:history.back()"><span class="glyphicon glyphicon-chevron-left"></span> Back to events list</a></p>
+		<p>
+			<a href="javascript:history.back()"><span class="glyphicon glyphicon-chevron-left"></span> Back to events list</a>
+			{% if g.user.is_authenticated %}
+				<span class="align-right">
+					<a href="{{ url_for('edit_event', slug=event.slug) }}">Edit event</a>
+				</span>
+			{% endif %}
+		</p>
 
 		<h2>{{ event.title }}</h2>
 		<hr>

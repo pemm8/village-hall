@@ -16,36 +16,40 @@ from markdown.extensions.extra import ExtraExtension
 from micawber import bootstrap_basic, parse_html
 from micawber.cache import Cache as OEmbedCache
 
-def login_required(fn):
-    @functools.wraps(fn)
-    def inner(*args, **kwargs):
-        if session.get('logged_in'):
-            return fn(*args, **kwargs)
-        return redirect(url_for('login', next=request.path))
-    return inner
+# def login_required(fn):
+#     @functools.wraps(fn)
+#     def inner(*args, **kwargs):
+#         if session.get('logged_in'):
+#             return fn(*args, **kwargs)
+#         return redirect(url_for('login', next=request.path))
+#     return inner
 
-@app.route('/login/', methods=['GET', 'POST'])
-def login():
-    next_url = request.args.get('next') or request.form.get('next')
-    if request.method == 'POST' and request.form.get('password'):
-        password = request.form.get('password')
-        # TODO: If using a one-way hash, you would also hash the user-submitted
-        # password and do the comparison on the hashed versions.
-        if password == app.config['ADMIN_PASSWORD']:
-            session['logged_in'] = True
-            session.permanent = True  # Use cookie to store session.
-            flash('You are now logged in.', 'success')
-            return redirect(next_url or url_for('index'))
-        else:
-            flash('Incorrect password.', 'danger')
-    return render_template('login.html', next_url=next_url)
+# @app.route('/login/', methods=['GET', 'POST'])
+# def login():
+#     next_url = request.args.get('next') or request.form.get('next')
+#     if request.method == 'POST' and request.form.get('password'):
+#         password = request.form.get('password')
+#         # TODO: If using a one-way hash, you would also hash the user-submitted
+#         # password and do the comparison on the hashed versions.
+#         if password == app.config['ADMIN_PASSWORD']:
+#             session['logged_in'] = True
+#             session.permanent = True  # Use cookie to store session.
+#             flash('You are now logged in.', 'success')
+#             return redirect(next_url or url_for('index'))
+#         else:
+#             flash('Incorrect password.', 'danger')
+#     return render_template('login.html', next_url=next_url)
 
-@app.route('/logout/', methods=['GET', 'POST'])
-def logout():
-    if request.method == 'POST':
-        session.clear()
-        return redirect(url_for('login'))
-    return render_template('logout.html')
+# @app.route('/logout/', methods=['GET', 'POST'])
+# def logout():
+#     if request.method == 'POST':
+#         session.clear()
+#         return redirect(url_for('login'))
+#     return render_template('logout.html')
+
+@app.before_request
+def before_request():
+    g.user = current_user
 
 @app.route('/')
 @app.route('/index')
@@ -151,5 +155,7 @@ def booking():
 
 admin.add_view(ModelView(Event, db.session))
 admin.add_view(ModelView(GalleryImage, db.session))
+admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(Role, db.session))
 gallerypath = os.path.join(os.path.dirname(__file__), 'static/img/gallery')
 admin.add_view(FileAdmin(gallerypath,'/static/img/gallery',name='Gallery Images'))
