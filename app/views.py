@@ -155,6 +155,13 @@ def contact():
 def booking():
     return render_template('contact_form.html')
 
+def send_mail(recipient, message):
+    return requests.post(
+        "https://api.mailgun.net/v/sandboxf4964574be95424090ad8595a65f344.mailgun.org/messages",
+        auth=("api", "key-f8ea884ca732d71f34b2cb001ef0463"),
+        data={"from":"", "to": recipient}
+        )
+
 admin.add_view(ModelView(Event, db.session))
 admin.add_view(ModelView(GalleryImage, db.session))
 admin.add_view(ModelView(User, db.session))

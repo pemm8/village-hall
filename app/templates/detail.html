@@ -18,13 +18,13 @@
 
 		<div class="row">
 
-			<div class=".col-md-2">
+			<div class="col-md-2">
 				<a href="/events"><span class="glyphicon glyphicon-chevron-left"></span> Back to events list</a>
 			</div>
 
-			<div class=".col-md-8"></div>
+			<div class="col-md-8"></div>
 
-			<div class=".col-md-2">
+			<div class="col-md-2">
 
 				{% if g.user.is_authenticated %}
 					<a href="{{ url_for('edit_event', slug=event.slug) }}">Edit event</a>

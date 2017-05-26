@@ -14,25 +14,13 @@
 	{% endfor %}
 
 	<h2 id="page-header">Hall Booking{% block content_title %}{% endblock %}</h2>
-	<h3>Terms, Conditions & Rates</h3>
+	<h3>Availability Calendar</h3>
 
 	<hr>
 
-	<div class="row container">
+	<div class="row">
 
-		<div class="col-md-5 well">
 
-			<p>Terms & Conditions displayed here</p>
-
-		</div>
-
-		<div class="col-md-1">&nbsp;</div>
-
-		<div class="col-md-4 well">
-			
-			<p>Rates displayed here</p>
-
-		</div>
 		
 	</div>
 
@@ -43,10 +31,10 @@
 			<a href="/" class="btn btn-default"><span class="glyph glyph-tick"></span>Cancel</a>
 
 		</div>
-
+		
 		<div class="col-md-2"></div>
 
-			<a href="{{ url_for('booking.show_calendar') }}" class="btn btn-primary"><span class="glyph glyph-tick"></span>Accept & Proceed</a>
+			<a href="/booking/booking_rules" class="btn btn-primary"><span class="glyph glyph-tick"></span>Select Date</a>
 
 		</div>
 

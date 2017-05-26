@@ -1,14 +1,16 @@
 import os
+import flask_admin as admin
 
-from flask import Flask, render_template
+from flask import Flask
+from app.booking import booking
 from flask_sqlalchemy import SQLAlchemy 
-import flask_admin as admin 
 from flask_security import Security, SQLAlchemyUserDatastore, \
 	UserMixin, RoleMixin, login_required, current_user, utils
 
 # Create App
 app = Flask(__name__)
 app.config.from_object('config')
+app.register_blueprint(booking, url_prefix='/booking')
 
 # Setup Database
 db = SQLAlchemy(app)
