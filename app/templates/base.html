@@ -100,13 +100,18 @@
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
 									<ul class="dropdown-menu">
 										{% if g.user.is_authenticated %}
-											<li class="dropdown-header">Events Admin</li>
-											<li><a href="{{ url_for('event_drafts') }}">View Drafts</a></li>
-											<li><a href="{{ url_for('create_event') }}">Create</a></li>
-											{% block extra_header %}{% endblock %}
-											<li role="separator" class="divider"></li>
-											<li><a href="/admin/" target="_blank">Database Admin</a></li>
-											<li role="separator" class="divider"></li>
+											{% if g.user.has_role('-events') %}
+												<li class="dropdown-header">Events Admin</li>
+												<li><a href="{{ url_for('event_drafts') }}">View Drafts</a></li>
+												<li><a href="{{ url_for('create_event') }}">Create</a></li>
+												{% block extra_header %}{% endblock %}
+												<li role="separator" class="divider"></li>
+											{% endif %}
+											{% if g.user.has_role('-database') %}
+												<li class="dropdown-header">Database Admin</li>
+												<li><a href="/admin/" target="_blank">Access Database Admin</a></li>
+												<li role="separator" class="divider"></li>
+											{% endif %}
 											<li><a href="/logout">Logout</a></li>
 										{% else %}
 											<li><a href="/login">Login</a></li>
