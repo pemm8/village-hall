@@ -1,10 +1,10 @@
 import os
+import flask_admin as admin 
 
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy 
-import flask_admin as admin 
-from flask_security import Security, SQLAlchemyUserDatastore, \
-	UserMixin, RoleMixin, login_required, current_user, utils
+from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required, current_user, utils, roles_required
+from flask_mail import Mail
 
 # Create App
 app = Flask(__name__)
@@ -12,6 +12,9 @@ app.config.from_object('config')
 
 # Setup Database
 db = SQLAlchemy(app)
+
+# Setup Flask-Mail
+mail = Mail(app)
 
 # Setup Flask-Admin
 admin = admin.Admin(app, name='Admin', template_mode='bootstrap3')
@@ -22,3 +25,4 @@ from models import User, Role
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
+

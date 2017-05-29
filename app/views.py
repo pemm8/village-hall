@@ -1,11 +1,9 @@
-import flask_admin
-import functools
-import os
-import re
+import re, os, functools, flask_admin
 
 from flask import render_template, flash, redirect, session, url_for, request, g, Markup, abort
 from app import app, db, admin
 from models import *
+from emails import *
 from flask_admin.contrib import sqla 
 from flask_admin.contrib.sqla import filters, ModelView
 from flask_admin.contrib.fileadmin import FileAdmin
@@ -15,37 +13,7 @@ from markdown.extensions.codehilite import CodeHiliteExtension
 from markdown.extensions.extra import ExtraExtension
 from micawber import bootstrap_basic, parse_html
 from micawber.cache import Cache as OEmbedCache
-
-# def login_required(fn):
-#     @functools.wraps(fn)
-#     def inner(*args, **kwargs):
-#         if session.get('logged_in'):
-#             return fn(*args, **kwargs)
-#         return redirect(url_for('login', next=request.path))
-#     return inner
-
-# @app.route('/login/', methods=['GET', 'POST'])
-# def login():
-#     next_url = request.args.get('next') or request.form.get('next')
-#     if request.method == 'POST' and request.form.get('password'):
-#         password = request.form.get('password')
-#         # TODO: If using a one-way hash, you would also hash the user-submitted
-#         # password and do the comparison on the hashed versions.
-#         if password == app.config['ADMIN_PASSWORD']:
-#             session['logged_in'] = True
-#             session.permanent = True  # Use cookie to store session.
-#             flash('You are now logged in.', 'success')
-#             return redirect(next_url or url_for('index'))
-#         else:
-#             flash('Incorrect password.', 'danger')
-#     return render_template('login.html', next_url=next_url)
-
-# @app.route('/logout/', methods=['GET', 'POST'])
-# def logout():
-#     if request.method == 'POST':
-#         session.clear()
-#         return redirect(url_for('login'))
-#     return render_template('logout.html')
+from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required, current_user, utils, roles_required
 
 @app.before_request
 def before_request():
@@ -85,21 +53,29 @@ def events():
 
 def create_or_edit_event(event, template):
     if request.method == 'POST':
+        # Validated
+        validated = True
+        # Set Event Values
         event.title = request.form.get('title') or ''
         event.content = request.form.get('content') or ''
         event.excerpt = request.form.get('excerpt') or ''
         event.published = request.form.get('published') or False
         event.thumbnail = request.form.get('thumbnail') or ''
         datestr = request.form.get('event-date')
+        if request.form.get('published'):
+            event.published = True
+        
         try:
             event.date = datetime.strptime(datestr,'%d/%m/%y %H:%M')
         except ValueError:
-            flash('Event date format does not match requirement.', 'danger')
-        if request.form.get('published'):
-            event.published = True
+            flash('Event date is missing or format does not match requirement.', 'danger')
+            validated = False
+
         if not (event.title and event.content):
             flash('Title and Content are required.', 'danger')
-        else:
+            validated = False
+
+        if validated == True:
             event.slug = event.get_slug()
             db.session.add(event)
             db.session.commit()
@@ -111,18 +87,33 @@ def create_or_edit_event(event, template):
 
     return render_template(template, event=event)
 
+@app.route('/<slug>/delete_event/')
+@login_required
+@roles_required('admin','-event-delete')
+# @login_required
+def delete_event(slug):
+    e = Event.query.filter_by(slug=slug).first()
+    if e is None:
+        abort(404)
+    db.session.delete(e)
+    db.session.commit()
+    flash('Event deleted successfully', 'success')
+    return render_template('events.html')
+
 @app.route('/create_event/', methods=['GET', 'POST'])
 @login_required
+@roles_required('admin','-events')
 def create_event():
     event = Event()
-    event.title = 'Event title here...'
-    event.content = 'Event information here...'
-    event.excerpt = 'Optional: short description for events page'
+    # event.title = ''
+    # event.content = 'Event information here...'
+    # event.excerpt = 'Optional: short description for events page'
     event.published = False
     return create_or_edit_event(event, 'create.html')
 
 @app.route('/<slug>/edit_event/', methods=['GET', 'POST'])
 @login_required
+@roles_required('admin','-events')
 def edit_event(slug):
     event = Event.query.filter_by(slug=slug).first()
     if event:
@@ -147,6 +138,11 @@ def gallery():
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
+        name = request.form.get('name') or ''
+        email = request.form.get('email') or ''
+        phone = request.form.get('phone') or ''
+        message = request.form.get('message') or ''
+        contact_email(name, email, phone, message)
         flash('Thank you, your message was sent', 'success')
         render_template('contact_form.html')
     return render_template('contact_form.html')
@@ -155,9 +151,13 @@ def contact():
 def booking():
     return render_template('contact_form.html')
 
-admin.add_view(ModelView(Event, db.session))
-admin.add_view(ModelView(GalleryImage, db.session))
-admin.add_view(ModelView(User, db.session))
-admin.add_view(ModelView(Role, db.session))
+class AppAdmin(sqla.ModelView):
+    def is_accessible(self):
+        return current_user.has_role('-database')
+
+admin.add_view(AppAdmin(Event, db.session))
+admin.add_view(AppAdmin(GalleryImage, db.session))
+admin.add_view(AppAdmin(User, db.session))
+admin.add_view(AppAdmin(Role, db.session))
 gallerypath = os.path.join(os.path.dirname(__file__), 'static/img/gallery')
 admin.add_view(FileAdmin(gallerypath,'/static/img/gallery',name='Gallery Images'))

@@ -1,0 +1,11 @@
+Contact Us Message Received
+
+The following message has been received:
+
+Name: {{ name }}
+Email: {{ email }}
+Phone: {{ phone }}
+Message: {{ message }}
+
+Regards,
+Gumley Village Hall Admin

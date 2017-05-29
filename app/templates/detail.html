@@ -18,14 +18,19 @@
 
 		<div class="row">
 
-			<div class=".col-md-2">
-				<a href="/events"><span class="glyphicon glyphicon-chevron-left"></span> Back to events list</a>
+			<div class="col-md-2">
+				<a href="/events" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span> Back to events list</a>
 			</div>
 
-			<div class=".col-md-2">
+			<div class="col-md-6"></div>
+
+			<div class="btn-group pull-right">
 
 				{% if g.user.is_authenticated %}
-					<a href="{{ url_for('edit_event', slug=event.slug) }}">Edit event</a>
+					<a href="{{ url_for('edit_event', slug=event.slug) }}" style="text-align: right;" class="btn btn-default">
+					<span class="glyphicon glyphicon-edit"></span> Edit event</a>
+					<a href="{{ url_for('delete_event', slug=event.slug) }}" style="text-align: right;" class="btn btn-default">
+					<span class="glyphicon glyphicon-trash"></span> Delete event</a>
 				{% endif %}
 
 			</div>

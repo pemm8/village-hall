@@ -23,21 +23,21 @@
     <div class="form-group">
       <label for="title" class="col-sm-2 control-label">Title</label>
       <div class="col-sm-10">
-        <input class="form-control" id="title" name="title" type="text" value="{{ event.title }}">
+        <input class="form-control" id="title" name="title" type="text" value="{% if event.title %}{{ event.title }}{% endif %}" placeholder="Enter event title here">
       </div>
     </div>
 
     <div class="form-group">
       <label for="excerpt" class="col-sm-2 control-label">Excerpt</label>
       <div class="col-sm-10">
-        <input class="form-control" id="excerpt" name="excerpt" type="text" value="{{ event.excerpt }}">
+        <input class="form-control" id="excerpt" name="excerpt" type="text" value="{% if event.excerpt %}{{ event.excerpt }}{% endif %}" placeholder="Event excerpt will appear on the events page; if not entered, excerpt will be automatically derived from event detail">
       </div>
     </div>
 
     <div class="form-group">
       <label for="thumbnail" class="col-sm-2 control-label">Thumbnail Image Name</label>
       <div class="col-sm-10">
-        <input class="form-control" id="thumbnail" name="thumbnail" type="text" value="{{ event.thumbnail }}">
+        <input class="form-control" id="thumbnail" name="thumbnail" type="text" value="{% if event.thumbnail %}{{ event.thumbnail }}{% endif %}">
       </div>
     </div>
 
