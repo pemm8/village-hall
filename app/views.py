@@ -27,7 +27,7 @@ def index():
 @app.route('/event_drafts')
 @login_required
 def event_drafts():
-    events = Event.query.filter_by(published=False).order_by(Event.date).all()
+    events = Event.query.filter_by(published=False,deleted=False).order_by(Event.date).all()
     months = [('May 2017','0517'),
                 ('Jun 2017','0617'),
                 ('Jul 2017','0717'),
@@ -40,7 +40,7 @@ def event_drafts():
 
 @app.route('/events')
 def events():
-    events = Event.query.filter_by(published=True).order_by(Event.date).all()
+    events = Event.query.filter_by(published=True,deleted=False).order_by(Event.date).all()
     months = [('May 2017','0517'),
                 ('Jun 2017','0617'),
                 ('Jul 2017','0717'),
@@ -95,7 +95,8 @@ def delete_event(slug):
     e = Event.query.filter_by(slug=slug).first()
     if e is None:
         abort(404)
-    db.session.delete(e)
+    e.deleted = True
+    db.session.add(e)
     db.session.commit()
     flash('Event deleted successfully', 'success')
     return render_template('events.html')
@@ -121,10 +122,10 @@ def edit_event(slug):
 
 @app.route('/<slug>/')
 def event_detail(slug):
-    if g.user.is_authenticated:
+    if g.user.is_authenticated and g.user.has_role('-events'):
         event = Event.query.filter_by(slug=slug).first()
     else:
-        event = Event.query.filter_by(slug=slug,published=True).first()
+        event = Event.query.filter_by(slug=slug,published=True,deleted=False).first()
     if event:
 	    return render_template('detail.html', event=event)
     else:
