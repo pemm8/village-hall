@@ -29,6 +29,7 @@ class Event(db.Model):
 	created = db.Column(db.DateTime, default=datetime.utcnow)
 	excerpt = db.Column(db.Text)
 	thumbnail = db.Column(db.String)
+	deleted = db.Column(db.Boolean, default=False)
 
 	@property
 	def html_content(self):
@@ -95,3 +96,20 @@ class User(db.Model, UserMixin):
 
 	def __str__(self):
 		return self.email
+
+class Message(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String)
+	phone = db.Column(db.String)
+	email = db.Column(db.String)
+	body = db.Column(db.Text)
+	status = db.Column(db.String(10))
+	created = db.Column(db.DateTime)
+	updated = db.Column(db.DateTime)
+	receipt = db.Column(db.String(8))
+
+	def allocate_receipt():
+		s=string.lowercase+string.digits
+		uid=''.join(random.sample(s,8))
+		if Message.filter_by(receipt=uid).first() is None:
+			return uid
