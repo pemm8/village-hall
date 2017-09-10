@@ -141,6 +141,7 @@ def contact():
         phone = request.form.get('phone') or ''
         message = request.form.get('message') or ''
         contact_email(name, email, phone, message)
+        contact_receipt_email(email)
         flash('Thank you, your message was sent', 'success')
         render_template('contact_form.html')
     return render_template('contact_form.html')

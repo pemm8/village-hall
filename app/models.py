@@ -108,8 +108,8 @@ class Message(db.Model):
 	updated = db.Column(db.DateTime)
 	receipt = db.Column(db.String(8))
 
-	def allocate_receipt():
+	def allocate_receipt(self):
 		s=string.lowercase+string.digits
 		uid=''.join(random.sample(s,8))
-		if Message.filter_by(receipt=uid).first() is None:
+		if Message.query.filter_by(receipt=uid).first() is None:
 			return uid
