@@ -103,3 +103,6 @@ ENV/
 *.db
 *.todo
 .DS_Store
+.gitsecret/
+*.secret
+db_backup/
