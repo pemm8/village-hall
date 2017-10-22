@@ -1,9 +1,5 @@
 import re, os, functools, flask_admin
-
 from flask import render_template, flash, redirect, session, url_for, request, g, Markup, abort
-from app import app, db, admin
-from models import *
-from emails import *
 from flask_admin.contrib import sqla 
 from flask_admin.contrib.sqla import filters, ModelView
 from flask_admin.contrib.fileadmin import FileAdmin
@@ -14,6 +10,11 @@ from markdown.extensions.extra import ExtraExtension
 from micawber import bootstrap_basic, parse_html
 from micawber.cache import Cache as OEmbedCache
 from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required, current_user, utils, roles_required
+
+from app import app, db, admin
+from models import User, Role, ContactMessage, Event, GalleryImage
+from emails import *
+from booking.models import RequestBooking, Client
 
 @app.before_request
 def before_request():
@@ -143,20 +144,31 @@ def contact():
         contact_email(name, email, phone, message)
         contact_receipt_email(email)
         flash('Thank you, your message was sent', 'success')
-        render_template('contact_form.html')
     return render_template('contact_form.html')
 
 @app.route('/booking')
 def booking():
-    return render_template('contact_form.html')
+    return redirect(url_for('booking'))
 
 class AppAdmin(sqla.ModelView):
     def is_accessible(self):
         return current_user.has_role('-database')
 
+class UserAdmin(sqla.ModelView):
+    def is_accessible(self):
+        return current_user.has_role('-users')
+
+class BookingAdmin(sqla.ModelView):
+    def is_accessible(self):
+        return current_user.has_role('-bookings')
+
 admin.add_view(AppAdmin(Event, db.session))
 admin.add_view(AppAdmin(GalleryImage, db.session))
-admin.add_view(AppAdmin(User, db.session))
-admin.add_view(AppAdmin(Role, db.session))
+admin.add_view(UserAdmin(User, db.session))
+admin.add_view(UserAdmin(Role, db.session))
+admin.add_view(AppAdmin(ContactMessage, db.session))
+admin.add_view(BookingAdmin(RequestBooking, db.session))
+admin.add_view(BookingAdmin(Client, db.session))
+
 gallerypath = os.path.join(os.path.dirname(__file__), 'static/img/gallery')
 admin.add_view(FileAdmin(gallerypath,'/static/img/gallery',name='Gallery Images'))

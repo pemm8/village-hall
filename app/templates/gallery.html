@@ -1,5 +1,25 @@
 {% extends "base.html" %}
 
+{% block head %}
+
+<style type="text/css">
+	
+	body .modal-dialog { /* Width */
+	    max-width: 100%;
+	    width: auto !important;
+	    display: inline-block;
+	}
+	.modal.in{
+	    text-align: center;
+	}
+	.modal-dialog img {
+		max-width: 1200px;
+	}
+
+</style>
+
+{% endblock %}
+
 {% block content %}
 
 	<div class="container contentalign brandtext brandtext-inverse">
@@ -11,12 +31,14 @@
 		{% for i in images %}
 
 			<div class="col-sm-6 col-md-4">
-			    <div class="thumbnail">
-				    <img src="{{ '/static/img/gallery/' + i.path }}" style="max-height: 200px;">
-		      		<div class="caption">
-		        		<p>{{ i.caption|truncate(100,True) }}</p>
-		      		</div>	
-			    </div>
+				<div class="thumbnail">
+					<a data-toggle="modal" data-target="#exampleModal" data-spath="{{ '/static/img/gallery/' + i.path }}">
+						<img src="{{ '/static/img/gallery/' + i.path }}" style="max-height: 200px;">
+					</a>
+					<div class="caption">
+						<p>{{ i.caption|truncate(100,True) }}</p>
+					</div>	
+				</div>
 			</div>
 
 		{% endfor %}
@@ -24,5 +46,35 @@
 		</div>
 
 	</div>
+
+	<div class="modal fade bs-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+		  		<div class="modal-body">
+		  			<img src=''>
+		  		</div>
+			  	<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			  	</div>
+			</div>
+  		</div>
+	</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+
+	<script type="text/javascript">
+		
+		$('#exampleModal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget) // Button that triggered the modal
+			var spath = button.data('spath') // Extract info from data-* attributes
+			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+			var modal = $(this)
+			modal.find('.modal-body img').attr('src',spath)
+		})
+
+	</script>
 
 {% endblock %}
