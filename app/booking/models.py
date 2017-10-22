@@ -1,4 +1,5 @@
 import datetime as dt
+import random, string
 
 from app import db
 
@@ -13,6 +14,9 @@ class Client(db.Model):
 	def __str__(self):
 		return self.email
 
+	def find_bookings(self):
+		return RequestBooking.query.filter_by(requestor=self).all()
+
 class RequestBooking(db.Model):
 	__tablename__ = 'request'
 	id = db.Column(db.Integer, primary_key=True)
@@ -24,3 +28,12 @@ class RequestBooking(db.Model):
 	requestor_id = db.Column(db.Integer, db.ForeignKey('client.id'))
 	requestor = db.relationship('Client',backref=db.backref('requests', lazy='dynamic'))
 	note = db.Column(db.Text)
+	receipt = db.Column(db.String(8))
+
+	def allocate_receipt(self):
+		s=string.lowercase+string.digits
+		uid=''.join(random.sample(s,8))
+		if RequestBooking.query.filter_by(receipt=uid).first() is None:
+			self.receipt = uid
+			return True
+			

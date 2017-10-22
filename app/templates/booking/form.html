@@ -8,7 +8,7 @@
 
   <h2 id="page-header">Booking Request</h2><hr>
 
-  <p>To book the hall, complete and submit the request form below</p>
+  <p>To book the hall, complete and submit the request form below - we'll get back to you with confirmation</p>
 
 	{% for category, message in get_flashed_messages(with_categories=true) %}
 	<div class="alert alert-{{ category }} alert-dismissable">
@@ -19,7 +19,7 @@
 
   {% from "_formhelpers.html" import render_field %}
 
-	<form method="POST" action="" role="form" class="custom-form-group form-group">
+	<form method="POST" action="" role="form" class="custom-form-group form-group form-horizontal">
 
       {{ form.hidden_tag() }}
 

@@ -16,7 +16,6 @@ def home():
 @booking.route('/form', methods=['GET','POST'])
 def form():
 	form = BookingForm()
-	import pdb; pdb.set_trace()
 	if form.validate_on_submit():
 		cl = Client(
 			first_name = form.first_name.data,
@@ -30,6 +29,7 @@ def form():
 			status = 'new',
 			dtStatus = datetime.utcnow(),
 			requestor = cl)
+		rq.allocate_receipt()
 		db.session.add(rq)
 		db.session.commit()
 		flash('Thank you, your booking request has been sent', 'success')

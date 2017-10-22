@@ -2,6 +2,19 @@
 
 {% block title %}Hall Booking - {% endblock %}
 
+{% block header %}
+
+	<style type="text/css">
+		
+	.incr-margin {
+		margin-left: 5px !important;
+		margin-right: 5px !important;
+	}
+
+	</style>
+
+{% endblock %}
+
 {% block content %}
 
 <div class="container contentalign brandtext">
@@ -14,39 +27,45 @@
 	{% endfor %}
 
 	<h2 id="page-header">Hall Booking{% block content_title %}{% endblock %}</h2>
+
 	<h3>Terms, Conditions & Rates</h3>
 
 	<hr>
 
-	<div class="row container">
+	<div class="panel panel-default">
 
-		<div class="col-md-5 well">
+		<div class="panel-heading">Current Rates</div>
 
-			<p>Terms & Conditions displayed here</p>
+		<div class="panel-body">[current rates displayed here]</div> 
 
-		</div>
+		<table class="table">
+			<tr>
+				<td>Per Hour</td>
+				<td>£x.xx</td>
+			</tr>
+		</table>
 
-		<div class="col-md-1">&nbsp;</div>
-
-		<div class="col-md-4 well">
-			
-			<p>Rates displayed here</p>
-
-		</div>
-		
 	</div>
 
+	<div class="panel panel-default">
+
+		<div class="panel-heading">Hall Terms & Conditions</div>
+
+		<div class="panel-body">[T&Cs]</div> 
+
+	</div>
+		
 	<div class="row">
 
-		<div class="col-md-5">
+		<div class="col-md-2">
 
 			<a href="/" class="btn btn-default"><span class="glyph glyph-tick"></span>Cancel</a>
 
 		</div>
 
-		<div class="col-md-1">&nbsp;</div>
+		<div class="col-md-8">&nbsp;</div>
 
-		<div class="col-md-4">
+		<div class="col-md-2">
 			
 			<a href="{{ url_for('booking.form') }}" class="btn btn-primary"><span class="glyph glyph-tick"></span>Accept & Proceed</a>
 
