@@ -32,5 +32,15 @@ def form():
 		rq.allocate_receipt()
 		db.session.add(rq)
 		db.session.commit()
-		flash('Thank you, your booking request has been sent', 'success')
+		# flash('Thank you, your booking request has been sent', 'success')
+		return redirect(url_for('booking.track', booking_ref=rq.receipt))
 	return render_template('booking/form.html',form=form)
+
+@booking.route('/track/<booking_ref>')
+def track(booking_ref):
+	b = RequestBooking.query.filter_by(receipt=booking_ref).first_or_404()
+	cl = b.requestor
+	if b:
+		return render_template('booking/confirmation.html', booking=b, client=cl)
+	else:
+		return "<h1>That booking doesn't exist</h1>"

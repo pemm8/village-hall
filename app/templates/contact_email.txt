@@ -6,6 +6,3 @@ Name: {{ name }}
 Email: {{ email }}
 Phone: {{ phone }}
 Message: {{ message }}
-
-Regards,
-Gumley Village Hall Admin

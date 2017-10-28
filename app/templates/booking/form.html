@@ -8,7 +8,7 @@
 
   <h2 id="page-header">Booking Request</h2><hr>
 
-  <p>To book the hall, complete and submit the request form below - we'll get back to you with confirmation</p>
+  <p>To book the hall, complete and submit the request form below - we'll get back to you with confirmation</p><br />
 
 	{% for category, message in get_flashed_messages(with_categories=true) %}
 	<div class="alert alert-{{ category }} alert-dismissable">
@@ -19,23 +19,32 @@
 
   {% from "_formhelpers.html" import render_field %}
 
-	<form method="POST" action="" role="form" class="custom-form-group form-group form-horizontal">
+  <div class="row">
 
-      {{ form.hidden_tag() }}
+    <div class="col-md-6 col-md-offset-3">
 
-      {{ render_field(form.first_name, class='form-control custom-form-half') }}
-      {{ render_field(form.last_name, class='form-control custom-form-half') }}
-      {{ render_field(form.email, class='form-control custom-form-half') }}
-      {{ render_field(form.phone, class='form-control custom-form-half') }}
+    	<form method="POST" action="" role="form" class="form-horizontal">
 
-      {{ render_field(form.dateStart, class='form-control custom-form-half requestDate', type='datetime', id='startDate') }}
-      {{ render_field(form.dateEnd, class='form-control custom-form-half requestDate', type='datetime', id='endDate') }}
+          {{ form.hidden_tag() }}
 
-      <button type="submit" class="btn btn-default">Submit</button>
+          {{ render_field(form.first_name, class='form-control') }}
+          {{ render_field(form.last_name, class='form-control') }}
+          {{ render_field(form.email, class='form-control') }}
+          {{ render_field(form.phone, class='form-control') }}
 
-    </form>
+          {{ render_field(form.dateStart, class='form-control requestDate', type='datetime', id='startDate') }}
+          {{ render_field(form.dateEnd, class='form-control requestDate', type='datetime', id='endDate') }}
 
-</div>
+          <a href="/" class="btn btn-default pull-left"><span class="glyph glyph-tick"></span>Cancel</a>
+          <button type="submit" class="btn btn-default pull-right btn-primary">Submit</button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
 
 {% endblock %}
 

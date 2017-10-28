@@ -1,12 +1,5 @@
-.custom-form-group {
-	margin: 5px;
-	padding: 5px;
-}
-.custom-form-half {
+.custom-form-half-group {
 	width: 50%;
-}
-.panel-heading {
-	font-weight: bold;
 }
 h3 {
 	font-style: italic;

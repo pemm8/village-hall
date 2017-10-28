@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, session, url_for, request, g
 from flask_admin.contrib import sqla 
 from flask_admin.contrib.sqla import filters, ModelView
 from flask_admin.contrib.fileadmin import FileAdmin
-from datetime import datetime
+import datetime
 from markdown import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
 from markdown.extensions.extra import ExtraExtension
@@ -15,6 +15,17 @@ from app import app, db, admin
 from models import User, Role, ContactMessage, Event, GalleryImage
 from emails import *
 from booking.models import RequestBooking, Client
+
+def get_months(number):
+    months = []
+    now = datetime.datetime.utcnow()
+    start = now.month
+    year = now.year
+    for n in range(start, start + number):
+        if n > 12: 
+            n -= 12
+        months.append((datetime.date(year, n, 1).strftime('%b %Y'), datetime.date(year, n, 1).strftime('%m%y')))
+    return months 
 
 @app.before_request
 def before_request():
@@ -29,27 +40,22 @@ def index():
 @login_required
 def event_drafts():
     events = Event.query.filter_by(published=False).order_by(Event.date).all()
-    months = [('May 2017','0517'),
-                ('Jun 2017','0617'),
-                ('Jul 2017','0717'),
-                ('Aug 2017','0817'),
-                ('Sep 2017','0917'),
-                ('Oct 2017','1017'),
-                ('Nov 2017','1117'),
-                ('Dec 2017','1217')]
+    months = get_months(6)
+    # months = [('May 2017','0517'),
+                # ('Jun 2017','0617'),
+                # ('Jul 2017','0717'),
+                # ('Aug 2017','0817'),
+                # ('Sep 2017','0917'),
+                # ('Oct 2017','1017'),
+                # ('Nov 2017','1117'),
+                # ('Dec 2017','1217')]
     return render_template('events.html',events=events, months=months,title='Draft Events')
 
 @app.route('/events')
 def events():
-    events = Event.query.filter_by(published=True).order_by(Event.date).all()
-    months = [('May 2017','0517'),
-                ('Jun 2017','0617'),
-                ('Jul 2017','0717'),
-                ('Aug 2017','0817'),
-                ('Sep 2017','0917'),
-                ('Oct 2017','1017'),
-                ('Nov 2017','1117'),
-                ('Dec 2017','1217')]
+    now = datetime.datetime.utcnow()
+    events = Event.query.filter_by(published=True).filter(Event.date>now).order_by(Event.date).all()
+    months = get_months(6)
     return render_template('events.html',events=events,months=months)
 
 def create_or_edit_event(event, template):

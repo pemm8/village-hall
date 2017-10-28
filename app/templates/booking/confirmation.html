@@ -6,6 +6,57 @@
 
   <div class="container contentalign brandtext brandtext-inverse">
 
+	{% if booking.status == "new" %}
+
+	  	<div class="panel panel-success">
+
+	  		<div class="panel-heading">
+	  			
+		  		<h4><span class="glyphicon glyphicon-time">&nbsp;</span> Thank you - your booking request has been received.</h4>
+
+	  		</div>
+	  		<div class="panel-body">
+
+	  			<p>We're checking availability at the hall and will get back to your ASAP.  <b>Your request is not yet confirmed.</b> </p>
+
+	  			<p>
+	  			Your reference is <b><u>{{ booking.receipt }}</u></b>.  To check on your booking status, click here [link] - don't worry, we'll email you this link.
+	  			</p>
+
+	  		</div>
+
+	  	</div>
+
+	 {% elif booking.status == "confirmed" %}
+
+	 	<div class="panel panel-primary">
+
+	  		<div class="panel-heading">
+	  			
+		  		<h4><span class="glyphicon glyphicon-ok">&nbsp;</span>Your booking is confirmed - booking reference {{ booking.receipt }}</h4>
+
+	  		</div>
+	  		<div class="panel-body">
+
+	  			<p>Your booking is confirmed with the details below.</p>
+
+	  			<br />
+
+	  			<table class="table">
+
+	  				<tr><td>Start Date & Time:</td><td>{{ booking.dtStart.strftime('%d %b %Y %-I:%M %p') }}</td></tr>
+	  				<tr><td>End Date & Time:</td><td>{{ booking.dtEnd.strftime('%d %b %Y %-I:%M %p') }}</td></tr>
+	  				<tr><td>Booking Name:</td><td>{{ booking.requestor.first_name ~ " " ~ booking.requestor.last_name }}</td></tr>
+	  				<tr><td>Contact Details:</td><td>Phone: {{ booking.requestor.phone }}</td><td>Email: {{ booking.requestor.email }}</td></tr>
+
+	  			</table>
+
+	  		</div>
+
+	  	</div>
+
+	{% endif %}
+
   </div>
 
 {% endblock %}
