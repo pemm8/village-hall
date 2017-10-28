@@ -20,10 +20,11 @@ def get_months(number):
     months = []
     now = datetime.datetime.utcnow()
     start = now.month
-    year = now.year
     for n in range(start, start + number):
+        year = now.year
         if n > 12: 
             n -= 12
+            year = year + 1
         months.append((datetime.date(year, n, 1).strftime('%b %Y'), datetime.date(year, n, 1).strftime('%m%y')))
     return months 
 
@@ -41,14 +42,6 @@ def index():
 def event_drafts():
     events = Event.query.filter_by(published=False).order_by(Event.date).all()
     months = get_months(6)
-    # months = [('May 2017','0517'),
-                # ('Jun 2017','0617'),
-                # ('Jul 2017','0717'),
-                # ('Aug 2017','0817'),
-                # ('Sep 2017','0917'),
-                # ('Oct 2017','1017'),
-                # ('Nov 2017','1117'),
-                # ('Dec 2017','1217')]
     return render_template('events.html',events=events, months=months,title='Draft Events')
 
 @app.route('/events')
@@ -73,7 +66,7 @@ def create_or_edit_event(event, template):
             event.published = True
         
         try:
-            event.date = datetime.strptime(datestr,'%d/%m/%y %H:%M')
+            event.date = datetime.datetime.strptime(datestr,'%d/%m/%y %H:%M')
         except ValueError:
             flash('Event date is missing or format does not match requirement.', 'danger')
             validated = False
