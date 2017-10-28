@@ -90,7 +90,6 @@ def create_or_edit_event(event, template):
 @app.route('/<slug>/delete_event/')
 @login_required
 @roles_required('admin','-event-delete')
-# @login_required
 def delete_event(slug):
     e = Event.query.filter_by(slug=slug).first()
     if e is None:

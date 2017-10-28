@@ -107,6 +107,11 @@
 												{% block extra_header %}{% endblock %}
 												<li role="separator" class="divider"></li>
 											{% endif %}
+											{% if g.user.has_role('-bookings') %}
+												<li class="dropdown-header">Bookings Admin</li>
+												<li><a href="{{ url_for('booking.admin') }}">Booking Admin</a></li>
+												<li role="separator" class="divider"></li>
+											{% endif %}
 											{% if g.user.has_role('-database') %}
 												<li class="dropdown-header">Database Admin</li>
 												<li><a href="/admin/" target="_blank">Access Database Admin</a></li>
