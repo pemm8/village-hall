@@ -98,6 +98,7 @@
 										{% if g.user.is_authenticated %}
 											<li class="dropdown-header">{{ g.user.email }}</li>
 											<li><a href="/change">Change Password</a></li>
+											<li><a href="https://mail.zoho.eu/zm/" target="_blank">Go to Mail <span class="glyphicon glyphicon-new-window"></span></a>
 											<li role="separator" class="divider"></li>
 											{% if g.user.has_role('-events') %}
 												<li class="dropdown-header">Events Admin</li>
