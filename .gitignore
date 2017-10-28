@@ -104,3 +104,4 @@ ENV/
 *.todo
 .DS_Store
 db_backup/
+config.py
