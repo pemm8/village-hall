@@ -154,6 +154,7 @@ class AppAdmin(sqla.ModelView):
         return current_user.has_role('-database')
 
 class UserAdmin(sqla.ModelView):
+    column_exclude_list = ['password']
     def is_accessible(self):
         return current_user.has_role('-users')
 
