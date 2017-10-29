@@ -35,9 +35,11 @@
 					<a data-toggle="modal" data-target="#exampleModal" data-spath="{{ '/static/img/gallery/' + i.path }}">
 						<img src="{{ '/static/img/gallery/' + i.path }}" style="max-height: 200px;">
 					</a>
+					{% if i.caption %}
 					<div class="caption">
 						<p>{{ i.caption|truncate(100,True) }}</p>
 					</div>	
+					{% endif %}
 				</div>
 			</div>
 

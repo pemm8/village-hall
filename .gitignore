@@ -106,3 +106,4 @@ ENV/
 db_backup/
 config.py
 prod/
+.DS_Store

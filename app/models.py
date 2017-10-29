@@ -64,6 +64,7 @@ class GalleryImage(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	path = db.Column(db.String)
 	caption = db.Column(db.String)
+	visible = db.Column(db.Boolean, default=False)
 
 # Flask-Security Models
 

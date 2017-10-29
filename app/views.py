@@ -129,7 +129,7 @@ def event_detail(slug):
 
 @app.route('/gallery')
 def gallery():
-    images = GalleryImage.query.all()
+    images = GalleryImage.query.filter_by(visible=True).all()
     return render_template('gallery.html',images=images)
 
 @app.route('/contact', methods=['GET', 'POST'])
@@ -147,6 +147,10 @@ def contact():
 @app.route('/booking')
 def booking():
     return redirect(url_for('booking'))
+
+@app.route('/gallery-admin')
+def gallery_admin():
+    pass
 
 class AppAdmin(sqla.ModelView):
     def is_accessible(self):
