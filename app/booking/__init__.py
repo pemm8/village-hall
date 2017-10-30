@@ -18,12 +18,14 @@ def home():
 def form():
 	form = BookingForm()
 	if form.validate_on_submit():
-		cl = Client(
-			first_name = form.first_name.data,
-			last_name = form.last_name.data,
-			email = form.email.data,
-			phone = form.phone.data)
-		db.session.add(cl)
+		cl = Client.query.filter_by(email=form.email.data).first()
+		if not cl:
+			cl = Client(
+				first_name = form.first_name.data,
+				last_name = form.last_name.data,
+				email = form.email.data,
+				phone = form.phone.data)
+			db.session.add(cl)
 		rq = RequestBooking(
 			dtStart = form.dateStart.data,
 			dtEnd = form.dateEnd.data,
@@ -40,8 +42,8 @@ def form():
 @booking.route('/track/<booking_ref>')
 def track(booking_ref):
 	b = RequestBooking.query.filter_by(receipt=booking_ref).first_or_404()
-	cl = b.requestor
 	if b:
+		cl = b.requestor
 		return render_template('booking/confirmation.html', booking=b, client=cl)
 	else:
 		return "<h1>That booking doesn't exist</h1>"
@@ -77,6 +79,28 @@ def cancel(booking_id):
 		msg = 'Booking %s cancelled' % (booking.receipt)
 		flash(msg, 'danger')
 		return redirect(url_for('booking.admin'))
+
+@booking.route('/admin/client/<client_id>')
+@login_required
+@roles_required('admin','-bookings')
+def admin_client(client_id):
+	client = Client.query.get(client_id)
+	if client:
+		bookings = client.find_bookings()
+		return render_template('booking/client.html', client=client, bookings=bookings)
+	else:
+		return redirect(url_for('admin'))
+
+@booking.route('/admin/booking/<booking_id>')
+@login_required
+@roles_required('admin','-bookings')
+def admin_booking(booking_id):
+	booking = RequestBooking.query.get(booking_id)
+	if booking:
+		return render_template('booking/booking-detail.html', booking=booking)
+	else:
+		return redirect(url_for('admin'))
+
 
 
 
