@@ -91,7 +91,7 @@
             {% for booking in confirmed_bookings %}
             
               <tr>
-                <td><a href="{{ url_for('booking.track', booking_ref=booking.receipt) }}">{{ booking.receipt }}</a></td>
+                <td><a href="{{ url_for('booking.admin_booking', booking_id=booking.id) }}">{{ booking.receipt }}</a></td>
                 <td><a href="{{ url_for('booking.admin_client', client_id=booking.requestor.id) }}">{{ booking.requestor.first_name ~ " " ~ booking.requestor.last_name }}</a></td>
                 <td>{{ booking.dtRequest.strftime('%d/%m/%y') }}</td>
                 <td>{{ booking.dtStart.strftime('%d/%m/%y') }}</td>

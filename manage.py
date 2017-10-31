@@ -1,8 +1,9 @@
 import os
+import datetime as dt
 from flask_script import Manager
 
 from app import app, db, models
-from app.models import GalleryImage
+from app.models import GalleryImage, User, Role
 
 manager = Manager(app)
 
@@ -28,6 +29,29 @@ def test_command():
 @manager.command
 def create_db():
 	db.create_all()
+
+@manager.command
+def create_super():
+	user = User.query.filter_by(email='super@gumleyvillagehall.org.uk').first()
+	if user:
+		db.session.delete(user)
+		db.session.commit()
+	user = User(
+		email='super@gumleyvillagehall.org.uk',
+		password='changeme',
+		active=True,
+		confirmed_at=dt.datetime.utcnow()
+		)
+	db.session.add(user)
+	roles = ['admin','-events','-event-delete','-bookings','-database','-users']
+	for role in roles:
+		r = Role.query.filter_by(name=role).first()
+		if not r:
+			r = Role(name=role)
+			db.session.add(r)
+		user.roles.append(r)
+	db.session.commit()
+	print('Superuser created')
 
 if __name__ == "__main__":
 	manager.run()

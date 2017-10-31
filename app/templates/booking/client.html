@@ -55,7 +55,7 @@
           {% for booking in bookings %}
           
             <tr>
-              <td><a href="{{ url_for('booking.track', booking_ref=booking.receipt) }}">{{ booking.receipt }}</a></td>
+              <td><a href="{{ url_for('booking.admin_booking', booking_id=booking.id) }}">{{ booking.receipt }}</a></td>
               <td>{{ booking.dtRequest.strftime('%d/%m/%y %H:%M') }}</td>
               <td>{{ booking.dtStart.strftime('%d/%m/%y %H:%M') }}</td>
               <td>{{ booking.dtEnd.strftime('%d/%m/%y %H:%M') }}</td>
