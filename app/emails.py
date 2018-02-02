@@ -1,7 +1,7 @@
 from flask import render_template
 from flask_mail import Message
 from app import app, mail, db
-from models import Message as db_message
+from models import ContactMessage
 from config import SECURITY_EMAIL_SENDER, ADMINS
 import datetime as dt
 
@@ -22,7 +22,7 @@ def send_email(subject, sender, recipients, text_body, html_body):
 	# receipt = db.Column(db.String(8))
 
 def save_contact(name,email,phone,message):
-	msgdb = db_message()
+	msgdb = ContactMessage()
 	msgdb.body = message
 	msgdb.name = name
 	msgdb.phone = phone

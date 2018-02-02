@@ -1,19 +1,40 @@
-import re, os, functools, flask_admin
+import re
+import os
+import functools
+import datetime
 
+import flask_admin
 from flask import render_template, flash, redirect, session, url_for, request, g, Markup, abort
-from app import app, db, admin
-from models import *
-from emails import *
 from flask_admin.contrib import sqla 
 from flask_admin.contrib.sqla import filters, ModelView
 from flask_admin.contrib.fileadmin import FileAdmin
-from datetime import datetime
+
 from markdown import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
 from markdown.extensions.extra import ExtraExtension
 from micawber import bootstrap_basic, parse_html
 from micawber.cache import Cache as OEmbedCache
 from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required, current_user, utils, roles_required
+
+from config import BOOKING_FORM_ENABLED
+from app import app, db, admin
+from models import User, Role, ContactMessage, Event, GalleryImage
+from emails import *
+from booking.models import RequestBooking, Client
+
+app.jinja_env.globals.update(BOOKING_FORM_ENABLED=BOOKING_FORM_ENABLED)
+
+def get_months(number):
+    months = []
+    now = datetime.datetime.utcnow()
+    start = now.month
+    for n in range(start, start + number):
+        year = now.year
+        if n > 12: 
+            n -= 12
+            year = year + 1
+        months.append((datetime.date(year, n, 1).strftime('%b %Y'), datetime.date(year, n, 1).strftime('%m%y')))
+    return months 
 
 @app.before_request
 def before_request():
@@ -28,27 +49,14 @@ def index():
 @login_required
 def event_drafts():
     events = Event.query.filter_by(published=False).order_by(Event.date).all()
-    months = [('May 2017','0517'),
-                ('Jun 2017','0617'),
-                ('Jul 2017','0717'),
-                ('Aug 2017','0817'),
-                ('Sep 2017','0917'),
-                ('Oct 2017','1017'),
-                ('Nov 2017','1117'),
-                ('Dec 2017','1217')]
+    months = get_months(6)
     return render_template('events.html',events=events, months=months,title='Draft Events')
 
 @app.route('/events')
 def events():
-    events = Event.query.filter_by(published=True).order_by(Event.date).all()
-    months = [('May 2017','0517'),
-                ('Jun 2017','0617'),
-                ('Jul 2017','0717'),
-                ('Aug 2017','0817'),
-                ('Sep 2017','0917'),
-                ('Oct 2017','1017'),
-                ('Nov 2017','1117'),
-                ('Dec 2017','1217')]
+    now = datetime.datetime.utcnow()
+    events = Event.query.filter_by(published=True).filter(Event.date>now).order_by(Event.date).all()
+    months = get_months(6)
     return render_template('events.html',events=events,months=months)
 
 def create_or_edit_event(event, template):
@@ -66,7 +74,7 @@ def create_or_edit_event(event, template):
             event.published = True
         
         try:
-            event.date = datetime.strptime(datestr,'%d/%m/%y %H:%M')
+            event.date = datetime.datetime.strptime(datestr,'%d/%m/%y %H:%M')
         except ValueError:
             flash('Event date is missing or format does not match requirement.', 'danger')
             validated = False
@@ -90,7 +98,6 @@ def create_or_edit_event(event, template):
 @app.route('/<slug>/delete_event/')
 @login_required
 @roles_required('admin','-event-delete')
-# @login_required
 def delete_event(slug):
     e = Event.query.filter_by(slug=slug).first()
     if e is None:
@@ -130,7 +137,7 @@ def event_detail(slug):
 
 @app.route('/gallery')
 def gallery():
-    images = GalleryImage.query.all()
+    images = GalleryImage.query.filter_by(visible=True).all()
     return render_template('gallery.html',images=images)
 
 @app.route('/contact', methods=['GET', 'POST'])
@@ -143,20 +150,39 @@ def contact():
         contact_email(name, email, phone, message)
         contact_receipt_email(email)
         flash('Thank you, your message was sent', 'success')
-        render_template('contact_form.html')
     return render_template('contact_form.html')
 
-@app.route('/booking')
-def booking():
-    return render_template('contact_form.html')
+# @app.route('/booking')
+# def booking():
+#     if BOOKING_FORM_ENABLED == True:
+#         return redirect(url_for('booking_app.home'))
+#     else:
+#         return redirect(url_for('contact'))
+
+@app.route('/gallery-admin')
+def gallery_admin():
+    pass
 
 class AppAdmin(sqla.ModelView):
     def is_accessible(self):
         return current_user.has_role('-database')
 
+class UserAdmin(sqla.ModelView):
+    column_exclude_list = ['password']
+    def is_accessible(self):
+        return current_user.has_role('-users')
+
+class BookingAdmin(sqla.ModelView):
+    def is_accessible(self):
+        return current_user.has_role('-bookings')
+
 admin.add_view(AppAdmin(Event, db.session))
 admin.add_view(AppAdmin(GalleryImage, db.session))
-admin.add_view(AppAdmin(User, db.session))
-admin.add_view(AppAdmin(Role, db.session))
+admin.add_view(UserAdmin(User, db.session))
+admin.add_view(UserAdmin(Role, db.session))
+admin.add_view(AppAdmin(ContactMessage, db.session))
+admin.add_view(BookingAdmin(RequestBooking, db.session))
+admin.add_view(BookingAdmin(Client, db.session))
+
 gallerypath = os.path.join(os.path.dirname(__file__), 'static/img/gallery')
 admin.add_view(FileAdmin(gallerypath,'/static/img/gallery',name='Gallery Images'))

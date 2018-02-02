@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Hall Booking - {% endblock %}
+
+{% block content %}
+
+  <div class="container contentalign brandtext brandtext-inverse">
+
+  {% for category, message in get_flashed_messages(with_categories=true) %}
+  <div class="alert alert-{{ category }} alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <p>{{ message }}</p>
+  </div>
+  {% endfor %}
+
+    <div class="row">
+    <div class="col-md-2">
+      <a href="/booking/admin" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span> Back</a>
+    </div>
+    </div>
+    
+    <br />
+
+    <div class="panel panel-primary">
+
+      <div class="panel-heading">Client Details</div>
+      <div class="panel-body">
+
+        <table class="table table-striped">
+
+          <tr><td>Client Name</td><td>{{ booking.requestor.first_name ~ " " ~ booking.requestor.last_name }}</td></tr>
+          <tr><td>Telephone</td><td>{{ booking.requestor.phone }}</td></tr>
+          <tr><td>Email</td><td><a href="mailto:{{ booking.requestor.email }}">{{ booking.requestor.email }}</a></td></tr>
+
+        </table>
+
+      </div>
+    </div>
+
+    <div class="panel panel-primary">
+
+      <div class="panel-heading">Booking Details</div>
+      <div class="panel-body">
+
+        <table class="table table-striped">
+
+          <tr><td>Date of Request</td><td>{{ booking.dtRequest.strftime('%d/%m/%y %H:%M') }}</td></tr>
+          <tr><td>Start Date & Time</td><td>{{ booking.dtStart.strftime('%d/%m/%y %H:%M') }}</td></tr>
+          <tr><td>End Date & Time</td><td>{{ booking.dtEnd.strftime('%d/%m/%y %H:%M') }}</a></td></tr>
+          <tr><td>Status</td><td>{{ booking.status }}</td></tr>
+          <tr><td>Date of Last Status Change</td><td>{{ booking.dtStatus.strftime('%d/%m/%y %H:%M') }}</td></tr>
+          <tr><td>Note</td><td>{{ booking.note }}</td></tr>
+
+        </table>
+
+      </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+
+
+
+{% endblock %}

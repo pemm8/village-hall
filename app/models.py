@@ -64,6 +64,7 @@ class GalleryImage(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	path = db.Column(db.String)
 	caption = db.Column(db.String)
+	visible = db.Column(db.Boolean, default=False)
 
 # Flask-Security Models
 
@@ -97,7 +98,8 @@ class User(db.Model, UserMixin):
 	def __str__(self):
 		return self.email
 
-class Message(db.Model):
+class ContactMessage(db.Model):
+	__tablename__ = 'message'
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String)
 	phone = db.Column(db.String)
@@ -111,5 +113,5 @@ class Message(db.Model):
 	def allocate_receipt(self):
 		s=string.lowercase+string.digits
 		uid=''.join(random.sample(s,8))
-		if Message.query.filter_by(receipt=uid).first() is None:
+		if ContactMessage.query.filter_by(receipt=uid).first() is None:
 			return uid

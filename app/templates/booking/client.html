@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Hall Booking - {% endblock %}
+
+{% block content %}
+
+  <div class="container contentalign brandtext brandtext-inverse">
+
+  {% for category, message in get_flashed_messages(with_categories=true) %}
+  <div class="alert alert-{{ category }} alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <p>{{ message }}</p>
+  </div>
+  {% endfor %}
+
+    <div class="row">
+    <div class="col-md-2">
+      <a href="/booking/admin" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span> Back</a>
+    </div>
+    </div>
+    
+    <br />
+
+    <div class="panel panel-primary">
+
+      <div class="panel-heading">Client Details</div>
+      <div class="panel-body">
+
+        <table class="table table-striped">
+
+          <tr><td>First Name</td><td>{{ client.first_name }}</td></tr>
+          <tr><td>Surname</td><td>{{ client.last_name }}</td></tr>
+          <tr><td>Telephone</td><td>{{ client.phone }}</td></tr>
+          <tr><td>Email</td><td><a href="mailto:{{ client.email }}">{{ client.email }}</a></td></tr>
+
+        </table>
+
+      </div>
+    </div>
+
+    <div class="panel panel-primary">
+
+      <div class="panel-heading">Client Bookings</div>
+      <div class="panel-body">
+
+        <table class="table table-striped">
+
+          <th>Reference</th>
+          <th>Request Date</th>
+          <th>Date/time from</th>
+          <th>Date/time to</th>
+          <th>Status</th>
+          <th></th>
+
+          {% for booking in bookings %}
+          
+            <tr>
+              <td><a href="{{ url_for('booking_app.track', booking_ref=booking.receipt) }}">{{ booking.receipt }}</a></td>
+              <td>{{ booking.dtRequest.strftime('%d/%m/%y %H:%M') }}</td>
+              <td>{{ booking.dtStart.strftime('%d/%m/%y %H:%M') }}</td>
+              <td>{{ booking.dtEnd.strftime('%d/%m/%y %H:%M') }}</td>
+              <td>{{ booking.status }}</td>
+              <td>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Action <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    {% if not booking.status=='confirmed' %}<li><a href="{{ url_for('booking_app.approve', booking_id=booking.id) }}">Confirm/Approve</a></li>{% endif %}
+                    {% if not booking.status=='cancelled' %}<li><a href="{{ url_for('booking_app.cancel', booking_id=booking.id) }}">Cancel</a></li>{% endif %}
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          
+          {% endfor %}
+
+        </table>
+
+      </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+
+
+
+{% endblock %}

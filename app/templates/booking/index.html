@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Hall Booking - {% endblock %}
+
+{% block header %}
+
+	<style type="text/css">
+		
+	.incr-margin {
+		margin-left: 5px !important;
+		margin-right: 5px !important;
+	}
+
+	</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container contentalign brandtext">
+
+	{% for category, message in get_flashed_messages(with_categories=true) %}
+	<div class="alert alert-{{ category }} alert-dismissable">
+	  	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	    <p>{{ message }}</p>
+	</div>
+	{% endfor %}
+
+	<h2 id="page-header">Hall Booking{% block content_title %}{% endblock %}</h2>
+
+	<hr>
+
+	<p>Hold your next event at Gumley Village Hall</p>
+
+	<p>
+		Gumley Village Hall sits at the centre of Gumley village and provides a versatile space which can be used for meetings, parties, events, classes.   With beautiful views across south Leicestershire from the rear of the hall, and nestled at the heart of our small village community, it's a friendly and welcoming space for hire.
+	</p>
+	<p>
+		We've had BBQs in the space outside with hungry folk inside and out, children's parties, anniversary dinners and pop up pub nights, quiz nights, WI and ramblers meets, Pilates and yoga, charity events and pop up cafes.  
+	</p>
+	<p>
+		The hall can hired for 2+ hours and provides some parking directly outside or along the quiet village itself.    
+	</p>
+
+	<p>Features:</p>
+
+	<ul>
+		<li>Capacity for up to x</li>
+		<li>Limited parking</li>
+		<li>etc.</li>
+	</ul>
+
+	<h3>Terms, Conditions & Rates</h3>
+
+	<div class="row">
+
+		<div class="col-md-6">
+
+			<div class="panel panel-default">
+
+				<div class="panel-heading">Current Rates</div>
+
+<!-- 				<div class="panel-body">[current rates displayed here]</div> 
+ -->
+				<table class="table">
+					<tr>
+						<td>Per Hour</td>
+						<td>£x.xx</td>
+					</tr>
+				</table>
+
+			</div>
+
+		</div>
+
+		<div class="col-md-6">
+
+			<div class="panel panel-default">
+
+				<div class="panel-heading">Terms & Conditions</div>
+
+				<div class="panel-body">[T&Cs]</div> 
+
+			</div>
+
+		</div>
+
+	</div>
+		
+	<div class="row">
+
+		<div class="col-md-12">
+
+			<a href="/" class="btn btn-default pull-left"><span class="glyph glyph-tick"></span>Cancel</a>
+
+			
+			<a href="{{ url_for('booking_app.form') }}" class="btn btn-primary pull-right"><span class="glyph glyph-tick"></span>Accept & Proceed</a>
+
+		</div>
+
+	</div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+
+	
+
+{% endblock %}
