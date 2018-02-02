@@ -18,7 +18,12 @@
             <div class="carousel-caption">
               <h2 class="brandtext">Book the village hall for your next event</h2>
               <p></p>
-              <p><a class="btn btn-lg btn-primary" href="{{ url_for('booking') }}" role="button">Read more</a></p>
+              <p>
+              {% if BOOKING_FORM_ENABLED %}
+                <a class="btn btn-lg btn-primary" href="{{ url_for('booking_app.home') }}" role="button">Read more</a></p>
+              {% else %}
+                <a class="btn btn-lg btn-primary" href="{{ url_for('contact') }}" role="button">Contact Us</a></p>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -73,7 +78,13 @@
 		  <br>
 		  <h2>Book the Hall</h2>
 		  <p>View rates and book the village hall for your special event</p>
-		  <p><a class="btn btn-default" href="{{ url_for('booking') }}" role="button">Booking Enquiry &raquo;</a></p>
+		  <p>
+        {% if BOOKING_FORM_ENABLED %}
+          <a class="btn btn-default" href="{{ url_for('booking_app.home') }}" role="button">Booking Enquiry &raquo;</a></p>
+        {% else %}
+          <a class="btn btn-default" href="{{ url_for('contact') }}" role="button">Contact Us &raquo;</a></p>
+        {% endif %}
+      </p>
 		</div><!-- /.col-lg-4 -->
 		<div class="col-lg-4">
       <span class="glyphicon glyphicon-camera glyph-lg"></span>

@@ -55,7 +55,7 @@
           {% for booking in bookings %}
           
             <tr>
-              <td><a href="{{ url_for('booking.track', booking_ref=booking.receipt) }}">{{ booking.receipt }}</a></td>
+              <td><a href="{{ url_for('booking_app.track', booking_ref=booking.receipt) }}">{{ booking.receipt }}</a></td>
               <td>{{ booking.dtRequest.strftime('%d/%m/%y %H:%M') }}</td>
               <td>{{ booking.dtStart.strftime('%d/%m/%y %H:%M') }}</td>
               <td>{{ booking.dtEnd.strftime('%d/%m/%y %H:%M') }}</td>
@@ -66,8 +66,8 @@
                     Action <span class="caret"></span>
                   </button>
                   <ul class="dropdown-menu">
-                    {% if not booking.status=='confirmed' %}<li><a href="{{ url_for('booking.approve', booking_id=booking.id) }}">Confirm/Approve</a></li>{% endif %}
-                    {% if not booking.status=='cancelled' %}<li><a href="{{ url_for('booking.cancel', booking_id=booking.id) }}">Cancel</a></li>{% endif %}
+                    {% if not booking.status=='confirmed' %}<li><a href="{{ url_for('booking_app.approve', booking_id=booking.id) }}">Confirm/Approve</a></li>{% endif %}
+                    {% if not booking.status=='cancelled' %}<li><a href="{{ url_for('booking_app.cancel', booking_id=booking.id) }}">Cancel</a></li>{% endif %}
                   </ul>
                 </div>
               </td>

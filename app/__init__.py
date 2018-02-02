@@ -13,10 +13,8 @@ app.config.from_object('config')
 db = SQLAlchemy(app)
 
 # Register Blueprints
-from app.booking import booking
-
-app.register_blueprint(booking, url_prefix='/booking')
-
+from app.booking import booking_app
+app.register_blueprint(booking_app, url_prefix='/bookinglive')
 
 # Setup Flask-Mail
 mail = Mail(app)

@@ -1,8 +1,8 @@
-import os
+import os, datetime
 from flask_script import Manager
 
 from app import app, db, models
-from app.models import GalleryImage
+from app.models import GalleryImage, User, Role
 
 manager = Manager(app)
 
@@ -20,6 +20,20 @@ def run_gallery_update():
 			f_count += 1
 	print "%d Files Added" % (f_count)
 	db.session.commit()
+
+@manager.command
+def add_super_user():
+	su = User()
+	su.email = "su@gumleyvillagehall.org.uk"
+	su.password = "pwd1987"
+	su.active = True
+	su.confirmed_at = datetime.datetime.utcnow()
+	rx = Role.query.all()
+	for r in rx:
+		su.roles.append(r)
+	db.session.add(su)
+	db.session.commit()
+	print "Super User Added"
 
 @manager.command
 def test_command():

@@ -1,9 +1,14 @@
-import re, os, functools, flask_admin
+import re
+import os
+import functools
+import datetime
+
+import flask_admin
 from flask import render_template, flash, redirect, session, url_for, request, g, Markup, abort
 from flask_admin.contrib import sqla 
 from flask_admin.contrib.sqla import filters, ModelView
 from flask_admin.contrib.fileadmin import FileAdmin
-import datetime
+
 from markdown import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
 from markdown.extensions.extra import ExtraExtension
@@ -11,10 +16,13 @@ from micawber import bootstrap_basic, parse_html
 from micawber.cache import Cache as OEmbedCache
 from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required, current_user, utils, roles_required
 
+from config import BOOKING_FORM_ENABLED
 from app import app, db, admin
 from models import User, Role, ContactMessage, Event, GalleryImage
 from emails import *
 from booking.models import RequestBooking, Client
+
+app.jinja_env.globals.update(BOOKING_FORM_ENABLED=BOOKING_FORM_ENABLED)
 
 def get_months(number):
     months = []
@@ -144,9 +152,12 @@ def contact():
         flash('Thank you, your message was sent', 'success')
     return render_template('contact_form.html')
 
-@app.route('/booking')
-def booking():
-    return redirect(url_for('booking'))
+# @app.route('/booking')
+# def booking():
+#     if BOOKING_FORM_ENABLED == True:
+#         return redirect(url_for('booking_app.home'))
+#     else:
+#         return redirect(url_for('contact'))
 
 @app.route('/gallery-admin')
 def gallery_admin():

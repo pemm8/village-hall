@@ -7,14 +7,14 @@ from forms import BookingForm
 from app import db
 from models import Client, RequestBooking
 
-booking = Blueprint('booking', __name__, template_folder='booking')
+booking_app = Blueprint('booking_app', __name__, template_folder='booking')
 
-@booking.route('/')
-@booking.route('/home')
+@booking_app.route('/')
+@booking_app.route('/home')
 def home():
 	return render_template('booking/index.html')
 
-@booking.route('/form', methods=['GET','POST'])
+@booking_app.route('/form', methods=['GET','POST'])
 def form():
 	form = BookingForm()
 	if form.validate_on_submit():
@@ -36,10 +36,10 @@ def form():
 		db.session.add(rq)
 		db.session.commit()
 		# flash('Thank you, your booking request has been sent', 'success')
-		return redirect(url_for('booking.track', booking_ref=rq.receipt))
+		return redirect(url_for('booking_app.track', booking_ref=rq.receipt))
 	return render_template('booking/form.html',form=form)
 
-@booking.route('/track/<booking_ref>')
+@booking_app.route('/track/<booking_ref>')
 def track(booking_ref):
 	b = RequestBooking.query.filter_by(receipt=booking_ref).first_or_404()
 	if b:
@@ -48,7 +48,7 @@ def track(booking_ref):
 	else:
 		return "<h1>That booking doesn't exist</h1>"
 
-@booking.route('/admin/')
+@booking_app.route('/admin/')
 @login_required
 @roles_required('admin','-bookings')
 def admin():
@@ -56,7 +56,7 @@ def admin():
 	confirmed_bookings = RequestBooking.query.filter_by(status='confirmed').all()
 	return render_template('booking/admin.html', new_bookings=new_bookings, confirmed_bookings=confirmed_bookings)
 
-@booking.route('/approve/<booking_id>')
+@booking_app.route('/approve/<booking_id>')
 @login_required
 @roles_required('admin','-bookings')
 def approve(booking_id):
@@ -66,9 +66,9 @@ def approve(booking_id):
 		db.session.commit()
 		msg = 'Booking %s confirmed' % (booking.receipt)
 		flash(msg, 'success')
-		return redirect(url_for('booking.admin'))
+		return redirect(url_for('booking_app.admin'))
 
-@booking.route('/cancel/<booking_id>')
+@booking_app.route('/cancel/<booking_id>')
 @login_required
 @roles_required('admin','-bookings')
 def cancel(booking_id):
@@ -78,9 +78,9 @@ def cancel(booking_id):
 		db.session.commit()
 		msg = 'Booking %s cancelled' % (booking.receipt)
 		flash(msg, 'danger')
-		return redirect(url_for('booking.admin'))
+		return redirect(url_for('booking_app.admin'))
 
-@booking.route('/admin/client/<client_id>')
+@booking_app.route('/admin/client/<client_id>')
 @login_required
 @roles_required('admin','-bookings')
 def admin_client(client_id):
@@ -91,7 +91,7 @@ def admin_client(client_id):
 	else:
 		return redirect(url_for('admin'))
 
-@booking.route('/admin/booking/<booking_id>')
+@booking_app.route('/admin/booking/<booking_id>')
 @login_required
 @roles_required('admin','-bookings')
 def admin_booking(booking_id):
