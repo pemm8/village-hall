@@ -1,5 +1,6 @@
 import datetime as dt
 import random, string
+from sqlalchemy import event
 
 from app import db
 
@@ -36,4 +37,3 @@ class RequestBooking(db.Model):
 		if RequestBooking.query.filter_by(receipt=uid).first() is None:
 			self.receipt = uid
 			return True
-			
