@@ -167,6 +167,10 @@ class AppAdmin(sqla.ModelView):
     def is_accessible(self):
         return current_user.has_role('-database')
 
+class AppFileAdmin(FileAdmin):
+    def is_accessible(self):
+        return current_user.has_role('-database')
+
 class UserAdmin(sqla.ModelView):
     column_exclude_list = ['password']
     def is_accessible(self):
@@ -185,4 +189,4 @@ admin.add_view(BookingAdmin(RequestBooking, db.session))
 admin.add_view(BookingAdmin(Client, db.session))
 
 gallerypath = os.path.join(os.path.dirname(__file__), 'static/img/gallery')
-admin.add_view(FileAdmin(gallerypath,'/static/img/gallery',name='Gallery Images'))
+admin.add_view(AppFileAdmin(gallerypath,'/static/img/gallery',name='Gallery Images'))

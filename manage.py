@@ -28,7 +28,7 @@ def add_super_user():
 	su.email = "su@gumleyvillagehall.org.uk"
 	su.password = "pwd1987"
 	su.active = True
-	su.confirmed_at = datetime.datetime.utcnow()
+	su.confirmed_at = dt.datetime.utcnow()
 	rx = Role.query.all()
 	for r in rx:
 		su.roles.append(r)
